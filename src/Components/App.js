@@ -2,6 +2,7 @@ import React from "react";
 import Youtube, { baseParams } from "../API/Youtube";
 import SearchBar from "./SearchBar/SearchBar";
 import VideoContainer from "./Video_Item_Container/VideoContainer";
+import VideoDetail from "./Video_Detail/VideoDetail";
 
 // API KEY
 const KEY = "AIzaSyA7Z1AZimc19rn4GnFkqwUzJ9Q7fPJvu1k";
@@ -9,6 +10,7 @@ const KEY = "AIzaSyA7Z1AZimc19rn4GnFkqwUzJ9Q7fPJvu1k";
 class App extends React.Component {
   state = {
     videos: [],
+    selectedVideo: null,
   };
 
   // Fetch Videos
@@ -20,14 +22,23 @@ class App extends React.Component {
       },
     });
     this.setState({ videos: response.data.items });
-    console.log(this.state.videos);
+  };
+
+  // Selected Video
+  onSelectVideo = (video) => {
+    console.log(video);
+    this.setState({ selectedVideo: video });
   };
 
   render() {
     return (
       <div className="ui container" style={{ marginTop: "10px" }}>
         <SearchBar searchVideo={this.searchVideo} />
-        <VideoContainer videos={this.state.videos} />
+        <VideoDetail video={this.state.selectedVideo} />
+        <VideoContainer
+          onSelectVideo={this.onSelectVideo}
+          videos={this.state.videos}
+        />
       </div>
     );
   }
