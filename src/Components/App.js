@@ -13,6 +13,10 @@ class App extends React.Component {
     selectedVideo: null,
   };
 
+  componentDidMount() {
+    this.searchVideo("Joe Rogan");
+  }
+
   // Fetch Videos
   searchVideo = async (term) => {
     const response = await Youtube.get("/search", {
@@ -21,7 +25,10 @@ class App extends React.Component {
         q: term,
       },
     });
-    this.setState({ videos: response.data.items });
+    this.setState({
+      videos: response.data.items,
+      selectedVideo: response.data.items[0],
+    });
   };
 
   // Selected Video
@@ -34,11 +41,19 @@ class App extends React.Component {
     return (
       <div className="ui container" style={{ marginTop: "10px" }}>
         <SearchBar searchVideo={this.searchVideo} />
-        <VideoDetail video={this.state.selectedVideo} />
-        <VideoContainer
-          onSelectVideo={this.onSelectVideo}
-          videos={this.state.videos}
-        />
+        <div className="ui grid">
+          <div className="ui row">
+            <div className="eleven wide column">
+              <VideoDetail video={this.state.selectedVideo} />
+            </div>
+            <div className="five wide column">
+              <VideoContainer
+                onSelectVideo={this.onSelectVideo}
+                videos={this.state.videos}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
